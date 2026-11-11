@@ -2,7 +2,7 @@ services:
   - type: web
     name: kmtc-nairobi-attendance
     runtime: python
-    plan: starter
+    plan: free
     buildCommand: pip install -r requirements.txt
     startCommand: gunicorn app:app
     healthCheckPath: /health
@@ -10,8 +10,4 @@ services:
       - key: SECRET_KEY
         generateValue: true
       - key: DB_PATH
-        value: /var/data/attendance.db
-    disk:
-      name: attendance-data
-      mountPath: /var/data
-      sizeGB: 1
+        value: /tmp/attendance.db

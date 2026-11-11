@@ -1,30 +1,22 @@
-# KMTC Nairobi Campus Student Attendance System — Render deployment
+# KMTC Nairobi Campus Student Attendance — Free Render deployment
 
-## Deploy
+## Deploy without adding a payment card
 
 1. Extract this ZIP.
-2. Create a GitHub repository named `kmtc-student-attendance`.
-3. Upload the **contents** of the `student_attendance_system` folder to the repository root (so `app.py`, `requirements.txt`, `render.yaml`, `templates/`, and `static/` are at the top level).
-4. Sign in to Render and choose **New + → Blueprint**.
-5. Connect the GitHub repository and select the branch containing `render.yaml`.
-6. Review the Blueprint. It creates a paid Starter web service with a 1 GB persistent disk. Confirm creation/deployment.
-7. When deployment finishes, open the `onrender.com` URL shown on the Render service page.
-8. Test `/health` (should show `{"status":"ok"}`), then submit a test registration number.
+2. In your GitHub repository, replace the old project files with the contents of this `student_attendance_system` folder. Keep `app.py`, `requirements.txt`, and `render.yaml` at the repository root, and upload the `templates/` and `static/` folders.
+3. Commit the changes to the `main` branch.
+4. Return to Render and cancel/close the payment-information dialog. Do not add a card.
+5. In the Blueprint setup, use the repository and `main` branch, then choose Retry/refresh so Render reads the updated `render.yaml`.
+6. Confirm that the service plan is **Free** and there is no disk or paid database in the configuration. Then apply/deploy.
+7. When deployment completes, open the generated `onrender.com` URL and test the homepage and `/health`.
 
-## Important data-storage note
+## Critical data warning
 
-The app is configured to save SQLite data at `/var/data/attendance.db`. The Blueprint attaches a persistent disk at `/var/data`, so attendance records survive app restarts and redeploys. Do not remove the disk or change `DB_PATH` unless you intentionally migrate the database.
+This free configuration stores SQLite at `/tmp/attendance.db` on the service's temporary filesystem. Render free services do not provide persistent disks. The database can be lost when the service restarts, spins down, or is redeployed. Free services also spin down after inactivity and may take about a minute to wake up.
 
-## Before collecting real attendance
-
-- Obtain KMTC authorization to collect and store student attendance data.
-- The current app accepts any syntactically valid registration number; it does not verify enrollment or identity.
-- Arrange access controls for attendance exports and regular backups before using it for official records.
-- Render persistent disks are available on paid services; this configuration uses the Starter plan. Check current Render pricing before confirming.
+Use this only for a demo or trial. Do not use it for official attendance until a persistent database/storage solution and backups are configured. Also, the app accepts registration numbers but does not verify student identity or enrollment.
 
 ## Local run
 
 `pip install -r requirements.txt`
 `python app.py`
-
-The local database defaults to `attendance.db` beside `app.py`.
